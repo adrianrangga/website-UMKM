@@ -11,6 +11,7 @@ import {
   UserIcon,
 } from "lucide-react";
 
+import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -28,8 +29,6 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-const NAV_LINKS = [{ href: "/products", label: "Katalog" }];
-
 export type HeaderUser = { name: string; role: "CUSTOMER" | "ADMIN" };
 
 export function SiteHeader({
@@ -44,6 +43,7 @@ export function SiteHeader({
   // Keranjang hanya untuk pembeli (dan tamu sebelum masuk).
   const showCart = user?.role !== "ADMIN";
   const isCustomer = user?.role === "CUSTOMER";
+  const isAdmin = user?.role === "ADMIN";
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -64,25 +64,16 @@ export function SiteHeader({
           SoleMate
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
-          {user?.role === "ADMIN" ? (
+        {isAdmin ? (
+          <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             <Link
               href="/admin"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
               Admin
             </Link>
-          ) : null}
-        </nav>
+          </nav>
+        ) : null}
 
         <div className="flex items-center gap-1">
           {showCart ? (
@@ -104,6 +95,8 @@ export function SiteHeader({
               ) : null}
             </Link>
           ) : null}
+
+          <ThemeToggle />
 
           {user ? (
             <DropdownMenu>
@@ -130,7 +123,7 @@ export function SiteHeader({
                     Akun Saya
                   </DropdownMenuItem>
                 ) : null}
-                {user.role === "ADMIN" ? (
+                {isAdmin ? (
                   <DropdownMenuItem render={<Link href="/admin" />}>
                     Panel Admin
                   </DropdownMenuItem>
@@ -163,18 +156,6 @@ export function SiteHeader({
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-1 px-4">
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn(
-                      buttonVariants({ variant: "ghost" }),
-                      "justify-start",
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
                 {showCart ? (
                   <Link
                     href="/cart"
@@ -208,7 +189,7 @@ export function SiteHeader({
                     Akun Saya
                   </Link>
                 ) : null}
-                {user?.role === "ADMIN" ? (
+                {isAdmin ? (
                   <Link
                     href="/admin"
                     className={cn(
