@@ -5,11 +5,7 @@ export function SiteFooter() {
         <p className="font-heading text-base font-medium text-foreground">
           SoleMate
         </p>
-        <p>Marketplace sepatu — proyek tugas kuliah Pemrograman Web.</p>
-        <p>
-          © {new Date().getFullYear()} SoleMate. Semua harga ditampilkan dalam
-          Rupiah.
-        </p>
+        <p>© {new Date().getFullYear()} SoleMate.</p>
       </div>
     </footer>
   );

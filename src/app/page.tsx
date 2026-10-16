@@ -114,7 +114,7 @@ export default function HomePage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
       <section className="rounded-2xl border bg-muted/40 px-6 py-12 sm:px-10 sm:py-16">
         <p className="text-sm font-medium text-primary">
-          Marketplace sepatu lokal
+          Marketplace sepatu lokal by Adrian Rangga Pandita
         </p>
         <h1 className="mt-2 max-w-2xl font-heading text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
           Sepatu yang pas, harga yang jelas.

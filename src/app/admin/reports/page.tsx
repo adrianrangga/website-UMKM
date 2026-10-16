@@ -125,17 +125,22 @@ export default async function AdminReportsPage() {
         <CardHeader>
           <CardTitle>Pendapatan {DAYS} Hari Terakhir</CardTitle>
         </CardHeader>
-        <CardContent className="flex h-40 items-end gap-2">
+        <CardContent className="flex gap-2">
           {dailyTotals.map((item) => (
             <div
               key={item.label}
               className="flex flex-1 flex-col items-center gap-1"
             >
-              <div
-                className="w-full rounded-t bg-primary/80"
-                style={{ height: `${Math.max(2, (item.total / maxDaily) * 100)}%` }}
-                title={formatRupiah(item.total)}
-              />
+              {/* Induk ber-tinggi tetap supaya `height: X%` batang punya acuan. */}
+              <div className="flex h-40 w-full items-end">
+                <div
+                  className="w-full rounded-t bg-primary/80"
+                  style={{
+                    height: `${Math.max(2, (item.total / maxDaily) * 100)}%`,
+                  }}
+                  title={formatRupiah(item.total)}
+                />
+              </div>
               <span className="text-xs text-muted-foreground">{item.label}</span>
             </div>
           ))}
