@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 
-import { requireUser, setSessionCookie, signToken } from "@/lib/auth";
+import {
+  clearSessionCookie,
+  requireUser,
+  setSessionCookie,
+  signToken,
+} from "@/lib/auth";
 import { HttpError, jsonError } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
+import { removeUploadedImage } from "@/lib/uploads";
 import { updateProfileSchema } from "@/lib/validators";
 
 export async function PATCH(request: Request) {
@@ -38,6 +44,44 @@ export async function PATCH(request: Request) {
     await setSessionCookie(token);
 
     return NextResponse.json({ user });
+  } catch (error) {
+    return jsonError(error);
+  }
+}
+
+/**
+ * Hapus akun permanen. Riwayat pesanan sengaja TIDAK dihapus (catatan
+ * transaksi toko harus disimpan), jadi akun yang punya pesanan ditolak.
+ */
+export async function DELETE() {
+  try {
+    const session = await requireUser();
+
+    const jumlahPesanan = await prisma.order.count({
+      where: { userId: session.sub },
+    });
+    if (jumlahPesanan > 0) {
+      throw new HttpError(
+        409,
+        "Akun tidak bisa dihapus karena memiliki riwayat pesanan. Riwayat transaksi toko perlu disimpan.",
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.sub },
+      select: { avatarUrl: true },
+    });
+
+    await prisma.$transaction([
+      prisma.cartItem.deleteMany({ where: { userId: session.sub } }),
+      prisma.address.deleteMany({ where: { userId: session.sub } }),
+      prisma.user.delete({ where: { id: session.sub } }),
+    ]);
+
+    await removeUploadedImage(user?.avatarUrl);
+    await clearSessionCookie();
+
+    return NextResponse.json({ ok: true });
   } catch (error) {
     return jsonError(error);
   }

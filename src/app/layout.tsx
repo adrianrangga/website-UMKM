@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
 
 import { SiteFooter } from "@/components/site-footer";
@@ -10,14 +10,18 @@ import { prisma } from "@/lib/prisma";
 
 import "./globals.css";
 
-const geistSans = Geist({
+// Font disimpan lokal (berkas Geist dari paket Next) supaya build & dev tidak
+// bergantung pada akses internet ke fonts.gstatic.com.
+const geistSans = localFont({
+  src: "./fonts/geist-latin.woff2",
   variable: "--font-sans",
-  subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/geist-mono-latin.woff2",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -37,12 +41,21 @@ export default async function RootLayout({
   const session = await getSession();
 
   let cartCount = 0;
+  let avatarUrl: string | null = null;
+
   if (session) {
-    const result = await prisma.cartItem.aggregate({
-      where: { userId: session.sub },
-      _sum: { quantity: true },
-    });
-    cartCount = result._sum.quantity ?? 0;
+    const [cart, user] = await Promise.all([
+      prisma.cartItem.aggregate({
+        where: { userId: session.sub },
+        _sum: { quantity: true },
+      }),
+      prisma.user.findUnique({
+        where: { id: session.sub },
+        select: { avatarUrl: true },
+      }),
+    ]);
+    cartCount = cart._sum.quantity ?? 0;
+    avatarUrl = user?.avatarUrl ?? null;
   }
 
   return (
@@ -59,7 +72,9 @@ export default async function RootLayout({
           <div className="flex min-h-svh flex-col">
             <SiteHeader
               user={
-                session ? { name: session.name, role: session.role } : null
+                session
+                  ? { name: session.name, role: session.role, avatarUrl }
+                  : null
               }
               cartCount={cartCount}
             />

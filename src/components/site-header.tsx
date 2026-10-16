@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
+import { UserAvatar } from "@/components/user-avatar";
 import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,7 +30,11 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-export type HeaderUser = { name: string; role: "CUSTOMER" | "ADMIN" };
+export type HeaderUser = {
+  name: string;
+  role: "CUSTOMER" | "ADMIN";
+  avatarUrl?: string | null;
+};
 
 export function SiteHeader({
   user,
@@ -103,9 +108,11 @@ export function SiteHeader({
               <DropdownMenuTrigger
                 className={cn(buttonVariants({ variant: "ghost" }), "gap-2")}
               >
-                <span className="grid size-6 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
-                  {user.name.charAt(0).toUpperCase()}
-                </span>
+                <UserAvatar
+                  name={user.name}
+                  avatarUrl={user.avatarUrl}
+                  className="size-6 text-xs"
+                />
                 <span className="hidden max-w-24 truncate sm:inline">
                   {user.name}
                 </span>

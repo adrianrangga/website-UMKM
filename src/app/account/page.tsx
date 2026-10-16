@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { AddressManager } from "@/components/address-manager";
+import { AvatarUpload } from "@/components/avatar-upload";
+import { DeleteAccountCard } from "@/components/delete-account-card";
 import { ProfileForm } from "@/components/profile-form";
 import {
   Card,
@@ -10,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -24,7 +27,7 @@ export default async function AccountPage() {
   const [user, addresses] = await Promise.all([
     prisma.user.findUniqueOrThrow({
       where: { id: session.sub },
-      select: { name: true, email: true, phone: true },
+      select: { name: true, email: true, phone: true, avatarUrl: true },
     }),
     prisma.address.findMany({
       where: { userId: session.sub },
@@ -52,9 +55,13 @@ export default async function AccountPage() {
         <Card className="h-fit">
           <CardHeader>
             <CardTitle>Profil</CardTitle>
-            <CardDescription>Perbarui nama dan nomor teleponmu.</CardDescription>
+            <CardDescription>
+              Perbarui foto, nama, dan nomor teleponmu.
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col gap-6">
+            <AvatarUpload name={user.name} currentUrl={user.avatarUrl} />
+            <Separator />
             <ProfileForm user={user} />
           </CardContent>
         </Card>
@@ -70,6 +77,10 @@ export default async function AccountPage() {
             <AddressManager addresses={addresses} />
           </CardContent>
         </Card>
+      </div>
+
+      <div className="mt-6">
+        <DeleteAccountCard />
       </div>
     </div>
   );
