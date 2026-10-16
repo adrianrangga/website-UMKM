@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600" role="img" aria-label="Gambar sepatu belum tersedia">
+  <rect width="600" height="600" fill="#f4f4f5" />
+  <path
+    d="M150 405 L150 300 C150 270 175 250 205 250 C235 250 255 270 275 300 L300 340 C340 360 400 372 455 380 L470 400 Z"
+    fill="#d4d4d8"
+    stroke="#a1a1aa"
+    stroke-width="10"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M145 400 L475 400 C486 400 495 409 495 420 L495 428 C495 440 484 448 472 448 L158 448 C146 448 135 440 135 428 L135 415 C135 407 139 400 145 400 Z"
+    fill="#a1a1aa"
+  />
+  <g stroke="#71717a" stroke-width="10" stroke-linecap="round">
+    <path d="M262 292 L318 320" />
+    <path d="M288 306 L344 334" />
+    <path d="M314 320 L360 344" />
+  </g>
+</svg>

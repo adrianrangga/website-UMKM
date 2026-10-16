@@ -1,0 +1,175 @@
+// SoleMate — skema database
+// Harga & nominal disimpan sebagai Int (Rupiah, tanpa desimal).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  EXPIRED
+  CANCELLED
+  REFUNDED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  phone        String?
+  role         Role     @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+
+  addresses Address[]
+  cartItems CartItem[]
+  orders    Order[]
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+
+  products Product[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  articleCode String   @unique
+  description String
+  brand       String
+  basePrice   Int
+  imageUrl    String
+  isActive    Boolean  @default(true)
+  categoryId  String
+  createdAt   DateTime @default(now())
+
+  category Category  @relation(fields: [categoryId], references: [id])
+  variants Variant[]
+
+  @@index([categoryId])
+}
+
+model Variant {
+  id            String  @id @default(cuid())
+  productId     String
+  sizeEur       Int
+  sizeUs        Float
+  color         String
+  sku           String  @unique
+  stock         Int     @default(0)
+  priceOverride Int?
+
+  product    Product     @relation(fields: [productId], references: [id])
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@unique([productId, sizeEur, color])
+  @@index([productId])
+}
+
+model Address {
+  id         String  @id @default(cuid())
+  userId     String
+  recipient  String
+  phone      String
+  street     String
+  city       String
+  province   String
+  postalCode String
+  isDefault  Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model CartItem {
+  id        String @id @default(cuid())
+  userId    String
+  variantId String
+  quantity  Int
+
+  user    User    @relation(fields: [userId], references: [id])
+  variant Variant @relation(fields: [variantId], references: [id])
+
+  @@unique([userId, variantId])
+  @@index([userId])
+}
+
+model Order {
+  id                String      @id @default(cuid())
+  orderNumber       String      @unique
+  userId            String
+  status            OrderStatus @default(PENDING_PAYMENT)
+  subtotal          Int
+  shippingCost      Int
+  total             Int
+  shippingRecipient String
+  shippingPhone     String
+  shippingAddress   String
+  note              String?
+  createdAt         DateTime    @default(now())
+  paidAt            DateTime?
+
+  user    User        @relation(fields: [userId], references: [id])
+  items   OrderItem[]
+  payment Payment?
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id           String @id @default(cuid())
+  orderId      String
+  variantId    String
+  productName  String
+  variantLabel String
+  unitPrice    Int
+  quantity     Int
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  variant Variant @relation(fields: [variantId], references: [id])
+
+  @@index([orderId])
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  orderId         String        @unique
+  midtransOrderId String        @unique
+  snapToken       String?
+  redirectUrl     String?
+  paymentType     String?
+  status          PaymentStatus @default(PENDING)
+  grossAmount     Int
+  rawNotification Json?
+  updatedAt       DateTime      @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id])
+}
