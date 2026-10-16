@@ -182,27 +182,57 @@ export function CheckoutForm({
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="recipient">Nama penerima</Label>
-                    <Input id="recipient" name="recipient" required />
+                    <Input
+                      id="recipient"
+                      name="recipient"
+                      autoComplete="name"
+                      required
+                    />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="phone">No. telepon</Label>
-                    <Input id="phone" name="phone" required />
+                    <Input
+                      id="phone"
+                      name="phone"
+                      autoComplete="tel"
+                      required
+                    />
                   </div>
                   <div className="flex flex-col gap-1.5 sm:col-span-2">
                     <Label htmlFor="street">Alamat lengkap</Label>
-                    <Input id="street" name="street" required />
+                    <Input
+                      id="street"
+                      name="street"
+                      autoComplete="street-address"
+                      required
+                    />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="city">Kota/Kabupaten</Label>
-                    <Input id="city" name="city" required />
+                    <Input
+                      id="city"
+                      name="city"
+                      autoComplete="address-level2"
+                      required
+                    />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="province">Provinsi</Label>
-                    <Input id="province" name="province" required />
+                    <Input
+                      id="province"
+                      name="province"
+                      autoComplete="address-level1"
+                      required
+                    />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="postalCode">Kode pos</Label>
-                    <Input id="postalCode" name="postalCode" required />
+                    <Input
+                      id="postalCode"
+                      name="postalCode"
+                      autoComplete="postal-code"
+                      required
+                    />
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -242,6 +272,9 @@ export function CheckoutForm({
           </CardHeader>
           <CardContent>
             <Textarea
+              id="note"
+              name="note"
+              aria-label="Catatan pesanan"
               value={note}
               onChange={(event) => setNote(event.target.value)}
               placeholder="Contoh: kirim setelah jam 15.00"

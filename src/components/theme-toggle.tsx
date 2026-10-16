@@ -11,12 +11,13 @@ export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Tema baru diketahui di client; tunggu mount agar tidak salah render.
+  // Tema baru diketahui di client; sebelum mount pakai nilai default yang
+  // sama dengan server supaya tidak terjadi hydration mismatch.
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const isDark = resolvedTheme === "dark";
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
     <button

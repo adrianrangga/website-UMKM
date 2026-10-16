@@ -52,6 +52,7 @@ export function ProfileForm({
         <Label htmlFor="name">Nama</Label>
         <Input
           id="name"
+          autoComplete="name"
           value={name}
           onChange={(event) => setName(event.target.value)}
           required
@@ -60,7 +61,7 @@ export function ProfileForm({
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" value={user.email} disabled />
+        <Input id="email" autoComplete="email" value={user.email} disabled />
         <span className="text-xs text-muted-foreground">
           Email tidak bisa diubah.
         </span>
@@ -70,6 +71,7 @@ export function ProfileForm({
         <Label htmlFor="phone">No. telepon</Label>
         <Input
           id="phone"
+          autoComplete="tel"
           value={phone}
           onChange={(event) => setPhone(event.target.value)}
           placeholder="08xxxxxxxxxx"

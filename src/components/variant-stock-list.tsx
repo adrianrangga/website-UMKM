@@ -107,7 +107,10 @@ export function VariantStockList({ variants }: { variants: VariantRow[] }) {
                 type="button"
                 size="sm"
                 variant="outline"
-                disabled={savingId === variant.id}
+                disabled={
+                  savingId === variant.id ||
+                  !/^\d+$/.test(stocks[variant.id] ?? "")
+                }
                 onClick={() => save(variant.id)}
               >
                 {savingId === variant.id ? "..." : "Simpan"}

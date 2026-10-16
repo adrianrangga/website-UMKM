@@ -196,6 +196,7 @@ export function AddressManager({ addresses }: { addresses: AddressInput[] }) {
               <Input
                 id="recipient"
                 name="recipient"
+                autoComplete="name"
                 defaultValue={values.recipient}
                 required
               />
@@ -205,6 +206,7 @@ export function AddressManager({ addresses }: { addresses: AddressInput[] }) {
               <Input
                 id="phone"
                 name="phone"
+                autoComplete="tel"
                 defaultValue={values.phone}
                 required
               />
@@ -214,19 +216,27 @@ export function AddressManager({ addresses }: { addresses: AddressInput[] }) {
               <Input
                 id="street"
                 name="street"
+                autoComplete="street-address"
                 defaultValue={values.street}
                 required
               />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="city">Kota/Kabupaten</Label>
-              <Input id="city" name="city" defaultValue={values.city} required />
+              <Input
+                id="city"
+                name="city"
+                autoComplete="address-level2"
+                defaultValue={values.city}
+                required
+              />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="province">Provinsi</Label>
               <Input
                 id="province"
                 name="province"
+                autoComplete="address-level1"
                 defaultValue={values.province}
                 required
               />
@@ -236,6 +246,7 @@ export function AddressManager({ addresses }: { addresses: AddressInput[] }) {
               <Input
                 id="postalCode"
                 name="postalCode"
+                autoComplete="postal-code"
                 defaultValue={values.postalCode}
                 required
               />

@@ -119,7 +119,9 @@ export function SizeSelector({ variants }: { variants: VariantOption[] }) {
         </div>
       </div>
 
-      <AddToCartButton variantId={selected ? selected.id : null} />
+      <AddToCartButton
+        variantId={selected && selected.stock > 0 ? selected.id : null}
+      />
     </div>
   );
 }
